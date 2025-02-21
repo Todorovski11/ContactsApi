@@ -30,9 +30,6 @@ dotnet add package FluentValidation
 dotnet add package Swashbuckle.AspNetCore
 
 
-🛠️ Database Migrations
-
-dotnet ef database update -p Infrastructure -s ContactsApi
 
 🐳 Running with Docker
 
@@ -80,8 +77,8 @@ To access them:
 
 Login to get a token
 {
-  "email": "admin@example.com",
-  "passwordhash": "YourAdminPassword"
+  "username": "admin",
+  "passwordHash": "Admin@123"
 }
 
 Include the token in the Authorization header:
