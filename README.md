@@ -9,7 +9,7 @@ SQL Server
 
 2️⃣ Clone the Repository
 
-git clone https://github.com/your-repo/ContactsApi.git
+git clone https://github.com/Todorovski11/ContactsApi.git
 
 cd ContactsApi
 
