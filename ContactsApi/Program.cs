@@ -18,6 +18,7 @@ using ContactsApi.ContactsApi.Routes;
 using Microsoft.OpenApi.Models;
 using ContactsApi.Application.Commands.Companies;
 using System.Security.Claims;
+using ContactsApi.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -113,12 +114,12 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-//// Apply Migrations 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var dbContext = scope.ServiceProvider.GetRequiredService<ContactsDbContext>();
-//    dbContext.Database.Migrate();
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ContactsDbContext>();
+    dbContext.Database.Migrate();
+    SeedAdminUser(dbContext);
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -142,3 +143,25 @@ app.RegisterCountryEndpoints();
 app.RegisterAuthEndpoints();
 
 app.Run();
+
+void SeedAdminUser(ContactsDbContext context)
+{
+    var adminUsername = "admin";
+    var adminPassword = "Admin@123";
+
+    if (!context.Users.Any(u => u.Username == adminUsername))
+    {
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(adminPassword);
+
+        var adminUser = new User
+        {
+            Username = adminUsername,
+            PasswordHash = hashedPassword,
+            Role = "Admin"
+        };
+
+        context.Users.Add(adminUser);
+        context.SaveChanges();
+        Console.WriteLine("Admin user created successfully!");
+    }
+}
